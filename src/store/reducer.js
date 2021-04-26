@@ -7,7 +7,7 @@ const initialState = {
        {period: 1, precision: 'Hours', dispPeriod:1, dispPrecision: 'Hour'},
        {period: 24, precision: 'Hours', dispPeriod:1, dispPrecision: 'W'},
    ],
-   current:  {period: 24, precision: 'Hours'} 
+   current:  {period: 24, precision: 'Hours', dispPeriod:1, dispPrecision: 'W'} 
 }
 
 const reducer = (state = initialState, action)=> {
@@ -17,7 +17,9 @@ const reducer = (state = initialState, action)=> {
                 ...state,
                 current:{
                     period: action.period,
-                    precision: action.precision
+                    precision: action.precision,
+                    dispPeriod: action.dispPeriod,
+                    dispPrecision: action.dispPrecision
                 },
                 data: action.data
             }

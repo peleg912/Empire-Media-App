@@ -3,46 +3,51 @@ import Tabs from './tabs/tabs';
 import {getData} from '../services/apiService';
 import {connect} from 'react-redux';
 import * as actions from '../store/actions/actions';
-import {LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
+import {LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip} from 'recharts';
 
 const Chart = (props)=> {
 
-    useEffect(async()=>{
-        try {
-           const data = await getData(props.current.period, props.current.precision);
-           await props.onUpdateCurrent(props.current.period, props.current.precision, data);
-        } catch (error) {
-            console.log(error);
-        }
+    //run when the page is loaded
+    useEffect(()=>{
+        async function fetchData() {
+            let data = await getData(props.current.period, props.current.precision);
+            await props.onUpdateCurrent(
+                 props.current.period,
+                 props.current.precision,
+                 props.current.dispPeriod,
+                 props.current.dispPrecision,
+                  data);
+          }
+          try {
+              fetchData();
+          } catch (error) {
+              alert(error);
+          }
     }, []);
 
-    const getNewChart = async(period, precision)=> {
+    //run whenever a tab is clicked
+    const getNewChart = async(period, precision, dispPeriod, dispPrecision)=> {
         try{
-            const data = await getData(period, precision);
-            await props.onUpdateCurrent(period, precision, data);
+            let data = await getData(period, precision);
+            await props.onUpdateCurrent(period, precision, dispPeriod, dispPrecision, data);
         }catch(error){
-            console.log(error);
+            alert(error);
         }
-    }
-
-    const renderTooltip = ()=> {
-        return(
-            <>
-            <span>Date/Time: {}</span>
-            </>
-        )
     }
 
 
     return(
-        <div className="container wrapper">
-            <Tabs clicked={(period, precision)=>getNewChart(period, precision)}/>
-            <LineChart width={1200} height={600} data={props.data} margin={{ top: 20, right: 20, bottom: 5, left: 0 }}>
-                <Line type="monotone" dataKey="Close" stroke="#8884d8" dot={false}/>
+        <div className="container wrapper" style={{textAlign:"center"}}>
+            <h1 style={{color:'white'}}>Apple stock</h1>
+            <Tabs clicked={(period, precision, dispPeriod, dispPrecision)=>getNewChart(period, precision, dispPeriod, dispPrecision)}/>
+            
+            <LineChart width={1200} height={600} data={props.data} margin={{ top: 30, right: 20, bottom: 5, left: 0 }}>
+                <Line type="monotone" dataKey="Close" stroke="#8884d8" dot={false} strokeWidth={1}/>
                 <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-                <XAxis dataKey="StartDate"/>
+                <XAxis xAxisId={0} dataKey="StartTime" hide="true"/>
+                <XAxis xAxisId={1} dataKey="StartDate"/>
                 <YAxis/>
-                <Tooltip />
+                <Tooltip/>
             </LineChart>
         </div>
     )
@@ -57,7 +62,7 @@ const mapStateToProps = (state)=> {
 
 const mapDispatchToProps = (dispatch)=>{
     return{
-        onUpdateCurrent: (period, precision, data)=> dispatch(actions.updateCurrentPeriod(period, precision, data))
+        onUpdateCurrent: (period, precision, dispPeriod, dispPrecision,data)=> dispatch(actions.updateCurrentPeriod(period, precision, dispPeriod, dispPrecision, data))
     }
 }
 

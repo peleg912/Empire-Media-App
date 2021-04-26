@@ -11,7 +11,7 @@ const Tabs = (props)=> {
                  key={index}
                  period={obj.dispPeriod}
                  precision={obj.dispPrecision}
-                 clicked={()=>props.clicked(obj.period, obj.precision)}/>)})}
+                 clicked={()=>props.clicked(obj.period, obj.precision, obj.dispPeriod, obj.dispPrecision)}/>)})}
          </ul>
       
         
