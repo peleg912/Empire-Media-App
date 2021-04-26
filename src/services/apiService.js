@@ -2,6 +2,7 @@ import axios from 'axios';
 
 export const getData = async(period, precision)=> {
     try {
+        console.log(`${process.env.REACT_APP_URL}&period=${period}&Precision=${precision}&${process.env.REACT_APP_PARAMS}`);
     const data = await axios.get(`${process.env.REACT_APP_URL}&period=${period}&Precision=${precision}&${process.env.REACT_APP_PARAMS}`);
      data.data.forEach(obj => {
         let index = obj.StartDate.lastIndexOf('/');
